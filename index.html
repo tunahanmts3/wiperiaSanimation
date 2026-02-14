@@ -2,8 +2,93 @@
 <html>
 <head>
   <title>Wiperia Sanimation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      text-align: center;
+      width: 300px;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #2a5298;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1e3c72;
+    }
+
+    #adminArea {
+      display: none;
+      margin-top: 15px;
+      color: green;
+    }
+
+    #userArea {
+      display: none;
+      margin-top: 15px;
+      color: blue;
+    }
+  </style>
 </head>
 <body>
-  <h1>Site Çalışıyor 🚀</h1>
+
+<div class="container">
+  <h2>Wiperia Sanimation</h2>
+
+  <input type="text" id="username" placeholder="Kullanıcı Adı">
+  <input type="password" id="password" placeholder="Şifre">
+  <input type="password" id="adminPassword" placeholder="Admin Şifresi (Sadece Admin)">
+  <br>
+  <button onclick="login()">Giriş Yap</button>
+
+  <div id="userArea">
+    🎉 Normal Kullanıcı Olarak Giriş Yaptın
+  </div>
+
+  <div id="adminArea">
+    👑 Admin Paneline Hoş Geldin
+  </div>
+</div>
+
+<script>
+function login() {
+  var adminPass = document.getElementById("adminPassword").value;
+
+  if(adminPass === "ZeFrEt629") {
+    document.getElementById("adminArea").style.display = "block";
+    document.getElementById("userArea").style.display = "none";
+  } else {
+    document.getElementById("userArea").style.display = "block";
+    document.getElementById("adminArea").style.display = "none";
+  }
+}
+</script>
+
 </body>
 </html>
