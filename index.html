@@ -2,12 +2,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Netflux</title>
+<title>WiperiaS Animation</title>
 <style>
 body{
 margin:0;
 font-family:Arial,Helvetica,sans-serif;
-background:#141414;
+background:#0b1e2d;
 color:white;
 }
 
@@ -20,37 +20,41 @@ flex-direction:column;
 }
 
 .card{
-background:rgba(0,0,0,0.85);
+background:#102c44;
 padding:40px;
-border-radius:10px;
-width:350px;
+border-radius:12px;
+width:360px;
 text-align:center;
-box-shadow:0 0 20px rgba(255,0,0,0.3);
+box-shadow:0 0 25px rgba(0,150,255,0.4);
 }
 
-input{
-width:90%;
+.brand{
+color:#4db8ff;
+font-size:28px;
+font-weight:bold;
+margin-bottom:20px;
+}
+
+input,select{
+width:100%;
 padding:10px;
 margin:8px 0;
 border:none;
-border-radius:5px;
+border-radius:6px;
 }
 
 button{
-padding:10px 20px;
+padding:10px 18px;
 border:none;
-border-radius:5px;
+border-radius:6px;
 cursor:pointer;
 margin:5px;
 }
 
-.red{background:#e50914;color:white;}
-.gray{background:#333;color:white;}
+.blue{background:#1e90ff;color:white;}
+.dark{background:#0f3050;color:white;}
 
-#main{
-display:none;
-padding:20px;
-}
+#main{display:none;padding:20px;}
 
 header{
 display:flex;
@@ -59,9 +63,16 @@ align-items:center;
 }
 
 .logo{
-color:#e50914;
-font-size:28px;
+color:#4db8ff;
+font-size:24px;
 font-weight:bold;
+}
+
+.searchBar{
+padding:8px;
+width:250px;
+border-radius:6px;
+border:none;
 }
 
 #filmContainer{
@@ -73,16 +84,17 @@ margin-top:20px;
 .film{
 width:180px;
 margin:10px;
-background:#222;
-border-radius:5px;
+background:#123a5a;
+border-radius:8px;
 overflow:hidden;
 text-align:center;
+cursor:pointer;
 position:relative;
 }
 
 .film img{
 width:100%;
-height:250px;
+height:240px;
 object-fit:cover;
 }
 
@@ -90,62 +102,61 @@ object-fit:cover;
 position:absolute;
 top:5px;
 right:5px;
-background:red;
-color:white;
+background:#ff4d4d;
 border:none;
-padding:3px 6px;
+color:white;
+padding:4px 6px;
 cursor:pointer;
 }
 
 #adminPanel{
-background:#1f1f1f;
+background:#0f3050;
 padding:20px;
 margin-top:20px;
 border-radius:10px;
 display:none;
 }
 
-#adminPanel input{
-width:200px;
+#detailPage{
+display:none;
+padding:20px;
 }
 
-.searchBar{
-padding:8px;
-width:250px;
-border-radius:5px;
-border:none;
+video{
+width:100%;
+max-height:400px;
+margin-top:15px;
+border-radius:10px;
 }
 </style>
 </head>
 <body>
 
-<!-- Giriş Ekranı -->
 <div id="loginScreen" class="center">
 <div class="card">
-<h2>NETFLUX</h2>
+<div class="brand">WiperiaS Animation</div>
 
 <div id="roleSelect">
-<button class="red" onclick="selectRole('normal')">Normal Üyelik</button>
-<button class="gray" onclick="selectRole('admin')">Admin</button>
+<button class="blue" onclick="selectRole('normal')">Normal Üyelik</button>
+<button class="dark" onclick="selectRole('admin')">Admin</button>
 </div>
 
 <div id="loginForm" style="display:none;">
 <input id="username" placeholder="Kullanıcı Adı">
 <input id="password" type="password" placeholder="Şifre">
 <input id="adminPassword" type="password" placeholder="Admin Şifresi" style="display:none;">
-<button class="red" onclick="login()">Giriş Yap</button>
+<button class="blue" onclick="login()">Giriş Yap</button>
 <p id="loginMessage"></p>
 </div>
 </div>
 </div>
 
-<!-- Ana Sayfa -->
 <div id="main">
 <header>
-<div class="logo">NETFLUX</div>
+<div class="logo">WiperiaS Animation</div>
 <div>
 <input class="searchBar" id="searchInput" placeholder="Film Ara..." onkeyup="renderFilms()">
-<button class="gray" onclick="logout()">Çıkış</button>
+<button class="dark" onclick="logout()">Çıkış</button>
 </div>
 </header>
 
@@ -153,10 +164,34 @@ border:none;
 <h3>🎬 Film Ekle</h3>
 <input id="filmName" placeholder="Film Adı">
 <input id="filmImage" placeholder="Poster URL">
-<button class="red" onclick="addFilm()">Ekle</button>
+<input id="filmVideo" placeholder="Video URL (mp4)">
+<select id="filmCategory">
+<option>Aksiyon</option>
+<option>Animasyon</option>
+<option>Bilim Kurgu</option>
+<option>Macera</option>
+</select>
+<button class="blue" onclick="addFilm()">Ekle</button>
+
+<h3>🤖 AI Film Oluştur</h3>
+<input id="aiPrompt" placeholder="Film fikrini yaz...">
+<select id="aiStyle">
+<option>Sinema Kalitesi</option>
+<option>Anime Tarzı</option>
+<option>Pixar Tarzı</option>
+<option>Gerçekçi</option>
+</select>
+<button class="blue" onclick="generateAI()">AI Film Oluştur</button>
 </div>
 
 <div id="filmContainer"></div>
+</div>
+
+<div id="detailPage">
+<button class="dark" onclick="goBack()">← Geri</button>
+<h2 id="detailTitle"></h2>
+<p id="detailCategory"></p>
+<video id="detailVideo" controls></video>
 </div>
 
 <script>
@@ -166,71 +201,59 @@ let films=JSON.parse(localStorage.getItem("films"))||[];
 function selectRole(role){
 currentRole=role;
 document.getElementById("loginForm").style.display="block";
-if(role==="admin"){
-document.getElementById("adminPassword").style.display="block";
-}else{
-document.getElementById("adminPassword").style.display="none";
-}
+document.getElementById("adminPassword").style.display=role==="admin"?"block":"none";
 }
 
 function login(){
-let user=document.getElementById("username").value;
-let pass=document.getElementById("password").value;
-let adminPass=document.getElementById("adminPassword").value;
-
-if(!user || !pass){return;}
+let user=username.value;
+let pass=password.value;
+let adminPass=adminPassword.value;
+if(!user||!pass)return;
 
 let users=JSON.parse(localStorage.getItem("users"))||{};
-
-if(currentRole==="admin"){
-if(adminPass!=="ZeFrEt629"){
+if(currentRole==="admin" && adminPass!=="ZeFrEt629"){
 alert("Admin şifresi yanlış");
 return;
 }
-}
 
 if(users[user]){
-document.getElementById("loginMessage").innerText="Mevcut hesaba giriş yapıldı.";
+loginMessage.innerText="Mevcut hesaba giriş yapıldı.";
 }else{
 users[user]=pass;
 localStorage.setItem("users",JSON.stringify(users));
-document.getElementById("loginMessage").innerText="Yeni hesap oluşturuldu ve giriş yapıldı.";
+loginMessage.innerText="Yeni hesap oluşturuldu ve giriş yapıldı.";
 }
 
 setTimeout(()=>{
-document.getElementById("loginScreen").style.display="none";
-document.getElementById("main").style.display="block";
+loginScreen.style.display="none";
+main.style.display="block";
 if(currentRole==="admin"){
-document.getElementById("adminPanel").style.display="block";
+adminPanel.style.display="block";
 }
 renderFilms();
 },1000);
 }
 
 function addFilm(){
-let name=document.getElementById("filmName").value;
-let image=document.getElementById("filmImage").value;
-if(!name||!image){return;}
-films.push({name,image});
-localStorage.setItem("films",JSON.stringify(films));
-renderFilms();
-}
-
-function deleteFilm(index){
-films.splice(index,1);
+let film={
+name:filmName.value,
+image:filmImage.value,
+video:filmVideo.value,
+category:filmCategory.value
+};
+films.push(film);
 localStorage.setItem("films",JSON.stringify(films));
 renderFilms();
 }
 
 function renderFilms(){
-let container=document.getElementById("filmContainer");
-let search=document.getElementById("searchInput").value.toLowerCase();
-container.innerHTML="";
+filmContainer.innerHTML="";
+let search=searchInput.value.toLowerCase();
 films.forEach((film,index)=>{
 if(film.name.toLowerCase().includes(search)){
-container.innerHTML+=`
-<div class="film">
-<button class="deleteBtn" onclick="deleteFilm(${index})">X</button>
+filmContainer.innerHTML+=`
+<div class="film" onclick="openDetail(${index})">
+${currentRole==="admin"?`<button class="deleteBtn" onclick="event.stopPropagation();deleteFilm(${index})">X</button>`:""}
 <img src="${film.image}">
 <p>${film.name}</p>
 </div>`;
@@ -238,8 +261,45 @@ container.innerHTML+=`
 });
 }
 
+function deleteFilm(i){
+films.splice(i,1);
+localStorage.setItem("films",JSON.stringify(films));
+renderFilms();
+}
+
+function openDetail(i){
+main.style.display="none";
+detailPage.style.display="block";
+detailTitle.innerText=films[i].name;
+detailCategory.innerText="Kategori: "+films[i].category;
+detailVideo.src=films[i].video;
+}
+
+function goBack(){
+detailPage.style.display="none";
+main.style.display="block";
+}
+
 function logout(){
 location.reload();
+}
+
+function generateAI(){
+let idea=aiPrompt.value;
+let style=aiStyle.value;
+
+let generatedFilm={
+name:"AI Film: "+idea,
+image:"https://picsum.photos/300/400?random="+Math.random(),
+video:"",
+category:"AI Üretim"
+};
+
+films.push(generatedFilm);
+localStorage.setItem("films",JSON.stringify(films));
+renderFilms();
+
+alert("AI Film taslağı oluşturuldu.\nGerçek video üretimi için AI API bağlanmalı.");
 }
 </script>
 
