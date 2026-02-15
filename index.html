@@ -19,7 +19,7 @@
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
       text-align: center;
-      width: 300px;
+      width: 320px;
     }
 
     input {
@@ -37,22 +37,24 @@
       background: #2a5298;
       color: white;
       cursor: pointer;
+      margin: 5px;
     }
 
     button:hover {
       background: #1e3c72;
     }
 
-    #adminArea {
+    #loginArea {
       display: none;
-      margin-top: 15px;
-      color: green;
     }
 
-    #userArea {
+    #adminPasswordField {
       display: none;
+    }
+
+    #message {
       margin-top: 15px;
-      color: blue;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -61,31 +63,65 @@
 <div class="container">
   <h2>Wiperia Sanimation</h2>
 
-  <input type="text" id="username" placeholder="Kullanıcı Adı">
-  <input type="password" id="password" placeholder="Şifre">
-  <input type="password" id="adminPassword" placeholder="Admin Şifresi (Sadece Admin)">
-  <br>
-  <button onclick="login()">Giriş Yap</button>
-
-  <div id="userArea">
-    🎉 Normal Kullanıcı Olarak Giriş Yaptın
+  <div id="choiceArea">
+    <button onclick="selectMode('normal')">Normal Üyelik</button>
+    <button onclick="selectMode('admin')">Admin</button>
   </div>
 
-  <div id="adminArea">
-    👑 Admin Paneline Hoş Geldin
+  <div id="loginArea">
+    <input type="text" id="username" placeholder="Kullanıcı Adı">
+    <input type="password" id="password" placeholder="Şifre">
+    <div id="adminPasswordField">
+      <input type="password" id="adminPassword" placeholder="Admin Şifresi">
+    </div>
+    <br>
+    <button onclick="login()">Giriş Yap</button>
   </div>
+
+  <div id="message"></div>
 </div>
 
 <script>
-function login() {
-  var adminPass = document.getElementById("adminPassword").value;
+let users = JSON.parse(localStorage.getItem("users")) || {};
+let mode = "normal";
 
-  if(adminPass === "ZeFrEt629") {
-    document.getElementById("adminArea").style.display = "block";
-    document.getElementById("userArea").style.display = "none";
+function selectMode(selectedMode) {
+  mode = selectedMode;
+  document.getElementById("loginArea").style.display = "block";
+  document.getElementById("choiceArea").style.display = "none";
+
+  if(mode === "admin") {
+    document.getElementById("adminPasswordField").style.display = "block";
+  }
+}
+
+function login() {
+  let username = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
+  let adminPass = document.getElementById("adminPassword").value;
+
+  if(!username || !password) {
+    alert("Boş alan bırakma!");
+    return;
+  }
+
+  if(mode === "admin") {
+    if(adminPass !== "ZeFrEt629") {
+      alert("Admin şifresi yanlış!");
+      return;
+    }
+  }
+
+  if(!users[username]) {
+    users[username] = password;
+    localStorage.setItem("users", JSON.stringify(users));
+    document.getElementById("message").innerText = "🎉 Yeni hesap oluşturuldu ve giriş yapıldı!";
   } else {
-    document.getElementById("userArea").style.display = "block";
-    document.getElementById("adminArea").style.display = "none";
+    if(users[username] === password) {
+      document.getElementById("message").innerText = "✅ Mevcut hesaba giriş yapıldı!";
+    } else {
+      alert("Şifre yanlış!");
+    }
   }
 }
 </script>
