@@ -2,223 +2,245 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Wiperia Sanimation</title>
-
+<title>Netflux</title>
 <style>
 body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#141414;
-  color:white;
+margin:0;
+font-family:Arial,Helvetica,sans-serif;
+background:#141414;
+color:white;
 }
 
-/* LOGIN */
 .center{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
-
-.box{
-  background:#222;
-  padding:30px;
-  border-radius:10px;
-  width:320px;
-  text-align:center;
-}
-
-input{
-  width:90%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:5px;
-  border:none;
-}
-
-button{
-  padding:10px 15px;
-  margin:5px;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
-  background:#e50914;
-  color:white;
-  font-weight:bold;
-}
-
-button:hover{
-  background:#b20710;
-}
-
-/* NAVBAR */
-.navbar{
-  display:flex;
-  justify-content:space-between;
-  padding:15px;
-  background:black;
-  align-items:center;
-}
-
-.logo{
-  font-size:22px;
-  font-weight:bold;
-  color:#e50914;
-}
-
-.search{
-  padding:8px;
-  border-radius:5px;
-  border:none;
-}
-
-/* MOVIES */
-.movies{
-  display:flex;
-  flex-wrap:wrap;
-  padding:20px;
-  gap:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+flex-direction:column;
 }
 
 .card{
-  background:#222;
-  width:200px;
-  padding:10px;
-  border-radius:8px;
-  transition:0.3s;
+background:rgba(0,0,0,0.85);
+padding:40px;
+border-radius:10px;
+width:350px;
+text-align:center;
+box-shadow:0 0 20px rgba(255,0,0,0.3);
 }
 
-.card:hover{
-  transform:scale(1.05);
+input{
+width:90%;
+padding:10px;
+margin:8px 0;
+border:none;
+border-radius:5px;
 }
 
-.addBtn{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#e50914;
-  padding:15px;
-  border-radius:50%;
-  font-size:20px;
+button{
+padding:10px 20px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+margin:5px;
 }
 
-#homePage{display:none;}
-#loginPage{display:block;}
-#adminPasswordField{display:none;}
+.red{background:#e50914;color:white;}
+.gray{background:#333;color:white;}
+
+#main{
+display:none;
+padding:20px;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+color:#e50914;
+font-size:28px;
+font-weight:bold;
+}
+
+#filmContainer{
+display:flex;
+flex-wrap:wrap;
+margin-top:20px;
+}
+
+.film{
+width:180px;
+margin:10px;
+background:#222;
+border-radius:5px;
+overflow:hidden;
+text-align:center;
+position:relative;
+}
+
+.film img{
+width:100%;
+height:250px;
+object-fit:cover;
+}
+
+.deleteBtn{
+position:absolute;
+top:5px;
+right:5px;
+background:red;
+color:white;
+border:none;
+padding:3px 6px;
+cursor:pointer;
+}
+
+#adminPanel{
+background:#1f1f1f;
+padding:20px;
+margin-top:20px;
+border-radius:10px;
+display:none;
+}
+
+#adminPanel input{
+width:200px;
+}
+
+.searchBar{
+padding:8px;
+width:250px;
+border-radius:5px;
+border:none;
+}
 </style>
 </head>
-
 <body>
 
-<!-- LOGIN PAGE -->
-<div id="loginPage" class="center">
-  <div class="box">
-    <h2>Wiperia Sanimation</h2>
+<!-- Giriş Ekranı -->
+<div id="loginScreen" class="center">
+<div class="card">
+<h2>NETFLUX</h2>
 
-    <div id="choice">
-      <button onclick="selectMode('normal')">Normal Üyelik</button>
-      <button onclick="selectMode('admin')">Admin</button>
-    </div>
-
-    <div id="loginArea" style="display:none;">
-      <input id="username" placeholder="Kullanıcı Adı">
-      <input id="password" type="password" placeholder="Şifre">
-      <div id="adminPasswordField">
-        <input id="adminPassword" type="password" placeholder="Admin Şifresi">
-      </div>
-      <button onclick="login()">Giriş Yap</button>
-    </div>
-
-    <div id="message"></div>
-  </div>
+<div id="roleSelect">
+<button class="red" onclick="selectRole('normal')">Normal Üyelik</button>
+<button class="gray" onclick="selectRole('admin')">Admin</button>
 </div>
 
-<!-- HOME PAGE -->
-<div id="homePage">
+<div id="loginForm" style="display:none;">
+<input id="username" placeholder="Kullanıcı Adı">
+<input id="password" type="password" placeholder="Şifre">
+<input id="adminPassword" type="password" placeholder="Admin Şifresi" style="display:none;">
+<button class="red" onclick="login()">Giriş Yap</button>
+<p id="loginMessage"></p>
+</div>
+</div>
+</div>
 
-  <div class="navbar">
-    <div class="logo">Wiperia</div>
-    <input class="search" id="searchInput" placeholder="Film Ara..." onkeyup="searchMovie()">
-  </div>
+<!-- Ana Sayfa -->
+<div id="main">
+<header>
+<div class="logo">NETFLUX</div>
+<div>
+<input class="searchBar" id="searchInput" placeholder="Film Ara..." onkeyup="renderFilms()">
+<button class="gray" onclick="logout()">Çıkış</button>
+</div>
+</header>
 
-  <div class="movies" id="movieList"></div>
+<div id="adminPanel">
+<h3>🎬 Film Ekle</h3>
+<input id="filmName" placeholder="Film Adı">
+<input id="filmImage" placeholder="Poster URL">
+<button class="red" onclick="addFilm()">Ekle</button>
+</div>
 
-  <button id="addMovieBtn" class="addBtn" onclick="addMovie()" style="display:none;">+</button>
-
+<div id="filmContainer"></div>
 </div>
 
 <script>
+let currentRole="";
+let films=JSON.parse(localStorage.getItem("films"))||[];
 
-let users = JSON.parse(localStorage.getItem("users")) || {};
-let movies = JSON.parse(localStorage.getItem("movies")) || [];
-let mode = "normal";
-
-function selectMode(selected){
-  mode = selected;
-  document.getElementById("choice").style.display="none";
-  document.getElementById("loginArea").style.display="block";
-  if(mode==="admin"){
-    document.getElementById("adminPasswordField").style.display="block";
-  }
+function selectRole(role){
+currentRole=role;
+document.getElementById("loginForm").style.display="block";
+if(role==="admin"){
+document.getElementById("adminPassword").style.display="block";
+}else{
+document.getElementById("adminPassword").style.display="none";
+}
 }
 
 function login(){
-  let u=username.value;
-  let p=password.value;
-  let ap=document.getElementById("adminPassword").value;
+let user=document.getElementById("username").value;
+let pass=document.getElementById("password").value;
+let adminPass=document.getElementById("adminPassword").value;
 
-  if(!users[u]){
-    users[u]=p;
-    localStorage.setItem("users",JSON.stringify(users));
-  }else{
-    if(users[u]!==p){
-      alert("Şifre yanlış!");
-      return;
-    }
-  }
+if(!user || !pass){return;}
 
-  if(mode==="admin"){
-    if(ap!=="ZeFrEt629"){
-      alert("Admin şifresi yanlış!");
-      return;
-    }
-    document.getElementById("addMovieBtn").style.display="block";
-  }
+let users=JSON.parse(localStorage.getItem("users"))||{};
 
-  document.getElementById("loginPage").style.display="none";
-  document.getElementById("homePage").style.display="block";
-  renderMovies();
+if(currentRole==="admin"){
+if(adminPass!=="ZeFrEt629"){
+alert("Admin şifresi yanlış");
+return;
+}
 }
 
-function renderMovies(){
-  let list=document.getElementById("movieList");
-  list.innerHTML="";
-  movies.forEach((m,i)=>{
-    list.innerHTML+=`
-      <div class="card">
-        <h3>${m}</h3>
-      </div>
-    `;
-  });
+if(users[user]){
+document.getElementById("loginMessage").innerText="Mevcut hesaba giriş yapıldı.";
+}else{
+users[user]=pass;
+localStorage.setItem("users",JSON.stringify(users));
+document.getElementById("loginMessage").innerText="Yeni hesap oluşturuldu ve giriş yapıldı.";
 }
 
-function addMovie(){
-  let name=prompt("Film adı:");
-  if(name){
-    movies.push(name);
-    localStorage.setItem("movies",JSON.stringify(movies));
-    renderMovies();
-  }
+setTimeout(()=>{
+document.getElementById("loginScreen").style.display="none";
+document.getElementById("main").style.display="block";
+if(currentRole==="admin"){
+document.getElementById("adminPanel").style.display="block";
+}
+renderFilms();
+},1000);
 }
 
-function searchMovie(){
-  let val=document.getElementById("searchInput").value.toLowerCase();
-  let cards=document.querySelectorAll(".card");
-  cards.forEach(c=>{
-    c.style.display=c.innerText.toLowerCase().includes(val)?"block":"none";
-  });
+function addFilm(){
+let name=document.getElementById("filmName").value;
+let image=document.getElementById("filmImage").value;
+if(!name||!image){return;}
+films.push({name,image});
+localStorage.setItem("films",JSON.stringify(films));
+renderFilms();
 }
 
+function deleteFilm(index){
+films.splice(index,1);
+localStorage.setItem("films",JSON.stringify(films));
+renderFilms();
+}
+
+function renderFilms(){
+let container=document.getElementById("filmContainer");
+let search=document.getElementById("searchInput").value.toLowerCase();
+container.innerHTML="";
+films.forEach((film,index)=>{
+if(film.name.toLowerCase().includes(search)){
+container.innerHTML+=`
+<div class="film">
+<button class="deleteBtn" onclick="deleteFilm(${index})">X</button>
+<img src="${film.image}">
+<p>${film.name}</p>
+</div>`;
+}
+});
+}
+
+function logout(){
+location.reload();
+}
 </script>
 
 </body>
