@@ -1,129 +1,224 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Wiperia Sanimation</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+<meta charset="UTF-8">
+<title>Wiperia Sanimation</title>
 
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-      text-align: center;
-      width: 320px;
-    }
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#141414;
+  color:white;
+}
 
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
+/* LOGIN */
+.center{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
 
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #2a5298;
-      color: white;
-      cursor: pointer;
-      margin: 5px;
-    }
+.box{
+  background:#222;
+  padding:30px;
+  border-radius:10px;
+  width:320px;
+  text-align:center;
+}
 
-    button:hover {
-      background: #1e3c72;
-    }
+input{
+  width:90%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:5px;
+  border:none;
+}
 
-    #loginArea {
-      display: none;
-    }
+button{
+  padding:10px 15px;
+  margin:5px;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+  background:#e50914;
+  color:white;
+  font-weight:bold;
+}
 
-    #adminPasswordField {
-      display: none;
-    }
+button:hover{
+  background:#b20710;
+}
 
-    #message {
-      margin-top: 15px;
-      font-weight: bold;
-    }
-  </style>
+/* NAVBAR */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  background:black;
+  align-items:center;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:bold;
+  color:#e50914;
+}
+
+.search{
+  padding:8px;
+  border-radius:5px;
+  border:none;
+}
+
+/* MOVIES */
+.movies{
+  display:flex;
+  flex-wrap:wrap;
+  padding:20px;
+  gap:20px;
+}
+
+.card{
+  background:#222;
+  width:200px;
+  padding:10px;
+  border-radius:8px;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:scale(1.05);
+}
+
+.addBtn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#e50914;
+  padding:15px;
+  border-radius:50%;
+  font-size:20px;
+}
+
+#homePage{display:none;}
+#loginPage{display:block;}
+#adminPasswordField{display:none;}
+</style>
 </head>
+
 <body>
 
-<div class="container">
-  <h2>Wiperia Sanimation</h2>
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="center">
+  <div class="box">
+    <h2>Wiperia Sanimation</h2>
 
-  <div id="choiceArea">
-    <button onclick="selectMode('normal')">Normal Üyelik</button>
-    <button onclick="selectMode('admin')">Admin</button>
-  </div>
-
-  <div id="loginArea">
-    <input type="text" id="username" placeholder="Kullanıcı Adı">
-    <input type="password" id="password" placeholder="Şifre">
-    <div id="adminPasswordField">
-      <input type="password" id="adminPassword" placeholder="Admin Şifresi">
+    <div id="choice">
+      <button onclick="selectMode('normal')">Normal Üyelik</button>
+      <button onclick="selectMode('admin')">Admin</button>
     </div>
-    <br>
-    <button onclick="login()">Giriş Yap</button>
+
+    <div id="loginArea" style="display:none;">
+      <input id="username" placeholder="Kullanıcı Adı">
+      <input id="password" type="password" placeholder="Şifre">
+      <div id="adminPasswordField">
+        <input id="adminPassword" type="password" placeholder="Admin Şifresi">
+      </div>
+      <button onclick="login()">Giriş Yap</button>
+    </div>
+
+    <div id="message"></div>
+  </div>
+</div>
+
+<!-- HOME PAGE -->
+<div id="homePage">
+
+  <div class="navbar">
+    <div class="logo">Wiperia</div>
+    <input class="search" id="searchInput" placeholder="Film Ara..." onkeyup="searchMovie()">
   </div>
 
-  <div id="message"></div>
+  <div class="movies" id="movieList"></div>
+
+  <button id="addMovieBtn" class="addBtn" onclick="addMovie()" style="display:none;">+</button>
+
 </div>
 
 <script>
+
 let users = JSON.parse(localStorage.getItem("users")) || {};
+let movies = JSON.parse(localStorage.getItem("movies")) || [];
 let mode = "normal";
 
-function selectMode(selectedMode) {
-  mode = selectedMode;
-  document.getElementById("loginArea").style.display = "block";
-  document.getElementById("choiceArea").style.display = "none";
-
-  if(mode === "admin") {
-    document.getElementById("adminPasswordField").style.display = "block";
+function selectMode(selected){
+  mode = selected;
+  document.getElementById("choice").style.display="none";
+  document.getElementById("loginArea").style.display="block";
+  if(mode==="admin"){
+    document.getElementById("adminPasswordField").style.display="block";
   }
 }
 
-function login() {
-  let username = document.getElementById("username").value;
-  let password = document.getElementById("password").value;
-  let adminPass = document.getElementById("adminPassword").value;
+function login(){
+  let u=username.value;
+  let p=password.value;
+  let ap=document.getElementById("adminPassword").value;
 
-  if(!username || !password) {
-    alert("Boş alan bırakma!");
-    return;
-  }
-
-  if(mode === "admin") {
-    if(adminPass !== "ZeFrEt629") {
-      alert("Admin şifresi yanlış!");
+  if(!users[u]){
+    users[u]=p;
+    localStorage.setItem("users",JSON.stringify(users));
+  }else{
+    if(users[u]!==p){
+      alert("Şifre yanlış!");
       return;
     }
   }
 
-  if(!users[username]) {
-    users[username] = password;
-    localStorage.setItem("users", JSON.stringify(users));
-    document.getElementById("message").innerText = "🎉 Yeni hesap oluşturuldu ve giriş yapıldı!";
-  } else {
-    if(users[username] === password) {
-      document.getElementById("message").innerText = "✅ Mevcut hesaba giriş yapıldı!";
-    } else {
-      alert("Şifre yanlış!");
+  if(mode==="admin"){
+    if(ap!=="ZeFrEt629"){
+      alert("Admin şifresi yanlış!");
+      return;
     }
+    document.getElementById("addMovieBtn").style.display="block";
+  }
+
+  document.getElementById("loginPage").style.display="none";
+  document.getElementById("homePage").style.display="block";
+  renderMovies();
+}
+
+function renderMovies(){
+  let list=document.getElementById("movieList");
+  list.innerHTML="";
+  movies.forEach((m,i)=>{
+    list.innerHTML+=`
+      <div class="card">
+        <h3>${m}</h3>
+      </div>
+    `;
+  });
+}
+
+function addMovie(){
+  let name=prompt("Film adı:");
+  if(name){
+    movies.push(name);
+    localStorage.setItem("movies",JSON.stringify(movies));
+    renderMovies();
   }
 }
+
+function searchMovie(){
+  let val=document.getElementById("searchInput").value.toLowerCase();
+  let cards=document.querySelectorAll(".card");
+  cards.forEach(c=>{
+    c.style.display=c.innerText.toLowerCase().includes(val)?"block":"none";
+  });
+}
+
 </script>
 
 </body>
