@@ -4,130 +4,26 @@
 <meta charset="UTF-8">
 <title>WiperiaS Animation</title>
 <style>
-body{
-margin:0;
-font-family:Arial,Helvetica,sans-serif;
-background:#0b1e2d;
-color:white;
-}
-
-.center{
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-flex-direction:column;
-}
-
-.card{
-background:#102c44;
-padding:40px;
-border-radius:12px;
-width:360px;
-text-align:center;
-box-shadow:0 0 25px rgba(0,150,255,0.4);
-}
-
-.brand{
-color:#4db8ff;
-font-size:28px;
-font-weight:bold;
-margin-bottom:20px;
-}
-
-input,select{
-width:100%;
-padding:10px;
-margin:8px 0;
-border:none;
-border-radius:6px;
-}
-
-button{
-padding:10px 18px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-margin:5px;
-}
-
+body{margin:0;font-family:Arial;background:#0b1e2d;color:white;}
+.center{display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;}
+.card{background:#102c44;padding:40px;border-radius:12px;width:360px;text-align:center;box-shadow:0 0 25px rgba(0,150,255,0.4);}
+.brand{color:#4db8ff;font-size:28px;font-weight:bold;margin-bottom:20px;}
+input,select,textarea{width:100%;padding:10px;margin:8px 0;border:none;border-radius:6px;}
+button{padding:10px 18px;border:none;border-radius:6px;cursor:pointer;margin:5px;}
 .blue{background:#1e90ff;color:white;}
 .dark{background:#0f3050;color:white;}
-
 #main{display:none;padding:20px;}
-
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.logo{
-color:#4db8ff;
-font-size:24px;
-font-weight:bold;
-}
-
-.searchBar{
-padding:8px;
-width:250px;
-border-radius:6px;
-border:none;
-}
-
-#filmContainer{
-display:flex;
-flex-wrap:wrap;
-margin-top:20px;
-}
-
-.film{
-width:180px;
-margin:10px;
-background:#123a5a;
-border-radius:8px;
-overflow:hidden;
-text-align:center;
-cursor:pointer;
-position:relative;
-}
-
-.film img{
-width:100%;
-height:240px;
-object-fit:cover;
-}
-
-.deleteBtn{
-position:absolute;
-top:5px;
-right:5px;
-background:#ff4d4d;
-border:none;
-color:white;
-padding:4px 6px;
-cursor:pointer;
-}
-
-#adminPanel{
-background:#0f3050;
-padding:20px;
-margin-top:20px;
-border-radius:10px;
-display:none;
-}
-
-#detailPage{
-display:none;
-padding:20px;
-}
-
-video{
-width:100%;
-max-height:400px;
-margin-top:15px;
-border-radius:10px;
-}
+header{display:flex;justify-content:space-between;align-items:center;}
+.logo{color:#4db8ff;font-size:24px;font-weight:bold;}
+.searchBar{padding:8px;width:250px;border-radius:6px;border:none;}
+#filmContainer{display:flex;flex-wrap:wrap;margin-top:20px;}
+.film{width:180px;margin:10px;background:#123a5a;border-radius:8px;overflow:hidden;text-align:center;cursor:pointer;position:relative;}
+.film img{width:100%;height:240px;object-fit:cover;}
+.deleteBtn{position:absolute;top:5px;right:5px;background:#ff4d4d;border:none;color:white;padding:4px 6px;cursor:pointer;}
+#adminPanel{background:#0f3050;padding:20px;margin-top:20px;border-radius:10px;display:none;}
+#detailPage{display:none;padding:20px;}
+video{width:100%;max-height:400px;margin-top:15px;border-radius:10px;}
+.small{font-size:12px;color:#bbb;}
 </style>
 </head>
 <body>
@@ -135,12 +31,10 @@ border-radius:10px;
 <div id="loginScreen" class="center">
 <div class="card">
 <div class="brand">WiperiaS Animation</div>
-
 <div id="roleSelect">
 <button class="blue" onclick="selectRole('normal')">Normal Üyelik</button>
 <button class="dark" onclick="selectRole('admin')">Admin</button>
 </div>
-
 <div id="loginForm" style="display:none;">
 <input id="username" placeholder="Kullanıcı Adı">
 <input id="password" type="password" placeholder="Şifre">
@@ -155,33 +49,25 @@ border-radius:10px;
 <header>
 <div class="logo">WiperiaS Animation</div>
 <div>
-<input class="searchBar" id="searchInput" placeholder="Film Ara..." onkeyup="renderFilms()">
+<input class="searchBar" id="searchInput" placeholder="Film / Dizi Ara..." onkeyup="renderFilms()">
 <button class="dark" onclick="logout()">Çıkış</button>
 </div>
 </header>
 
 <div id="adminPanel">
-<h3>🎬 Film Ekle</h3>
-<input id="filmName" placeholder="Film Adı">
-<input id="filmImage" placeholder="Poster URL">
-<input id="filmVideo" placeholder="Video URL (mp4)">
-<select id="filmCategory">
-<option>Aksiyon</option>
-<option>Animasyon</option>
-<option>Bilim Kurgu</option>
-<option>Macera</option>
-</select>
-<button class="blue" onclick="addFilm()">Ekle</button>
+<h3>🎬 İçerik Oluştur</h3>
 
-<h3>🤖 AI Film Oluştur</h3>
-<input id="aiPrompt" placeholder="Film fikrini yaz...">
-<select id="aiStyle">
-<option>Sinema Kalitesi</option>
-<option>Anime Tarzı</option>
-<option>Pixar Tarzı</option>
-<option>Gerçekçi</option>
+<input id="seriesName" placeholder="Film / Dizi Adı">
+<select id="typeSelect">
+<option>Film (Tek Bölüm)</option>
+<option>Dizi (Bölümlü)</option>
 </select>
-<button class="blue" onclick="generateAI()">AI Film Oluştur</button>
+
+<input type="number" id="seasonNumber" placeholder="Sezon No (Dizi için)">
+<input type="number" id="episodeNumber" placeholder="Bölüm No (Dizi için)">
+<textarea id="scenarioText" rows="4" placeholder="Senaryoyu buraya yaz..."></textarea>
+
+<button class="blue" onclick="generateContent()">AI ile Oluştur</button>
 </div>
 
 <div id="filmContainer"></div>
@@ -190,18 +76,18 @@ border-radius:10px;
 <div id="detailPage">
 <button class="dark" onclick="goBack()">← Geri</button>
 <h2 id="detailTitle"></h2>
-<p id="detailCategory"></p>
-<video id="detailVideo" controls></video>
+<p id="detailInfo"></p>
+<p id="detailScenario" class="small"></p>
 </div>
 
 <script>
 let currentRole="";
-let films=JSON.parse(localStorage.getItem("films"))||[];
+let contents=JSON.parse(localStorage.getItem("contents"))||[];
 
 function selectRole(role){
 currentRole=role;
-document.getElementById("loginForm").style.display="block";
-document.getElementById("adminPassword").style.display=role==="admin"?"block":"none";
+loginForm.style.display="block";
+adminPassword.style.display=role==="admin"?"block":"none";
 }
 
 function login(){
@@ -227,52 +113,72 @@ loginMessage.innerText="Yeni hesap oluşturuldu ve giriş yapıldı.";
 setTimeout(()=>{
 loginScreen.style.display="none";
 main.style.display="block";
-if(currentRole==="admin"){
-adminPanel.style.display="block";
-}
+if(currentRole==="admin"){adminPanel.style.display="block";}
 renderFilms();
 },1000);
 }
 
-function addFilm(){
-let film={
-name:filmName.value,
-image:filmImage.value,
-video:filmVideo.value,
-category:filmCategory.value
+function generateContent(){
+let name=seriesName.value;
+let type=typeSelect.value;
+let season=seasonNumber.value||1;
+let episode=episodeNumber.value||1;
+let scenario=scenarioText.value;
+
+if(!name||!scenario)return;
+
+let related=contents.filter(c=>c.name===name && c.type.includes("Dizi"));
+let previousStory="";
+related.forEach(r=>{
+if(r.season==season && r.episode<episode){
+previousStory+=r.scenario+" ";
+}
+});
+
+let fullScenario=previousStory + scenario;
+
+let newContent={
+name:name,
+type:type,
+season:season,
+episode:episode,
+scenario:fullScenario,
+poster:"https://picsum.photos/300/400?random="+Math.random()
 };
-films.push(film);
-localStorage.setItem("films",JSON.stringify(films));
+
+contents.push(newContent);
+localStorage.setItem("contents",JSON.stringify(contents));
 renderFilms();
 }
 
 function renderFilms(){
 filmContainer.innerHTML="";
 let search=searchInput.value.toLowerCase();
-films.forEach((film,index)=>{
-if(film.name.toLowerCase().includes(search)){
+contents.forEach((c,index)=>{
+if(c.name.toLowerCase().includes(search)){
 filmContainer.innerHTML+=`
 <div class="film" onclick="openDetail(${index})">
-${currentRole==="admin"?`<button class="deleteBtn" onclick="event.stopPropagation();deleteFilm(${index})">X</button>`:""}
-<img src="${film.image}">
-<p>${film.name}</p>
+${currentRole==="admin"?`<button class="deleteBtn" onclick="event.stopPropagation();deleteContent(${index})">X</button>`:""}
+<img src="${c.poster}">
+<p>${c.name}</p>
 </div>`;
 }
 });
 }
 
-function deleteFilm(i){
-films.splice(i,1);
-localStorage.setItem("films",JSON.stringify(films));
+function deleteContent(i){
+contents.splice(i,1);
+localStorage.setItem("contents",JSON.stringify(contents));
 renderFilms();
 }
 
 function openDetail(i){
 main.style.display="none";
 detailPage.style.display="block";
-detailTitle.innerText=films[i].name;
-detailCategory.innerText="Kategori: "+films[i].category;
-detailVideo.src=films[i].video;
+let c=contents[i];
+detailTitle.innerText=c.name;
+detailInfo.innerText=c.type.includes("Dizi")?`Sezon ${c.season} Bölüm ${c.episode}`:"Film";
+detailScenario.innerText=c.scenario;
 }
 
 function goBack(){
@@ -280,28 +186,8 @@ detailPage.style.display="none";
 main.style.display="block";
 }
 
-function logout(){
-location.reload();
-}
-
-function generateAI(){
-let idea=aiPrompt.value;
-let style=aiStyle.value;
-
-let generatedFilm={
-name:"AI Film: "+idea,
-image:"https://picsum.photos/300/400?random="+Math.random(),
-video:"",
-category:"AI Üretim"
-};
-
-films.push(generatedFilm);
-localStorage.setItem("films",JSON.stringify(films));
-renderFilms();
-
-alert("AI Film taslağı oluşturuldu.\nGerçek video üretimi için AI API bağlanmalı.");
-}
+function logout(){location.reload();}
 </script>
-
 </body>
 </html>
+
